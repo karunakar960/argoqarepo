@@ -1,61 +1,64 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+---
 metadata:
-  name: oes-argo-rollout
+  name: "oes-argo-rollout"
+apiVersion: "argoproj.io/v1alpha1"
+kind: "Rollout"
 spec:
+  template:
+    metadata:
+      annotations:
+        prometheus_io_path: "/mgmt/prometheus"
+        prometheus.io/scrape: "true"
+        prometheus_io_port: "8088"
+      labels:
+        app: "rollouts-demo-exp-2"
+    spec:
+      containers:
+      - image: "docker.io/opsmxdev/issuegen:v3.0.9"
+        imagePullPolicy: "Always"
+        name: "rollouts-baseline"
+        ports:
+        - containerPort: 8088
   replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: rollouts-demo-exp-2
-  template:
-    metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus_io_path: '/mgmt/prometheus'
-        prometheus_io_port: '8088'    
-      labels:
-        app: rollouts-demo-exp-2
-    spec:
-      containers:
-        - name: rollouts-baseline
-          image: docker.io/opsmxdev/issuegen:v3.0.8
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8088
+      app: "rollouts-demo-exp-2"
   strategy:
     canary:
       steps:
-        - setWeight: 20
-        - pause: { duration: 2s }
-        - experiment:
-            templates:
-              - name: baseline
-                specRef: stable
-              - name: canary
-                specRef: canary
-            analyses:
-              - name : oes-analysisqas
-                requiredForCompletion: true
-                templateName: oes-analysisqas
-                args:
-                  - name: experiment-hash
-                    valueFrom:
-                      podTemplateHashValue: Latest
-        - setWeight: 60
-        - pause: { duration: 60s }
-        - experiment:
-            templates:
-              - name: baseline
-                specRef: stable
-              - name: canary
-                specRef: canary
-            analyses:
-              - name : oes-analysisqas
-                requiredForCompletion: true
-                templateName: oes-analysisqas
-                args:
-                  - name: experiment-hash
-                    valueFrom: 
-                      podTemplateHashValue: Latest
-        - setWeight: 90
+      - setWeight: 20
+      - pause:
+          duration: "2s"
+      - experiment:
+          analyses:
+          - args:
+            - name: "experiment-hash"
+              valueFrom:
+                podTemplateHashValue: "Latest"
+            templateName: "oes-analysisqas"
+            name: "oes-analysisqas"
+            requiredForCompletion: true
+          templates:
+          - specRef: "stable"
+            name: "baseline"
+          - specRef: "canary"
+            name: "canary"
+      - setWeight: 60
+      - pause:
+          duration: "60s"
+      - experiment:
+          analyses:
+          - args:
+            - name: "experiment-hash"
+              valueFrom:
+                podTemplateHashValue: "Latest"
+            templateName: "oes-analysisqas"
+            name: "oes-analysisqas"
+            requiredForCompletion: true
+          templates:
+          - specRef: "stable"
+            name: "baseline"
+          - specRef: "canary"
+            name: "canary"
+      - setWeight: 90
