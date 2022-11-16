@@ -1,31 +1,30 @@
----
+kind: AnalysisTemplate
+apiVersion: argoproj.io/v1alpha1
 metadata:
-  name: "oes-analysisqas"
-apiVersion: "argoproj.io/v1alpha1"
-kind: "karunakaredit"
+  name: oes-analysisqas
 spec:
   args:
-  - name: "experiment-hash"
+    - name: experiment-hash
   metrics:
-  - provider:
-      opsmx:
-        canaryStartTime: "2021-11-03T11:29:46.915Z"
-        application: "elastcanddatadogapp1"
-        profile: "opsmx-profile"
-        lifetimeMinutes: 6
-        threshold:
-          pass: 80
-          marginal: 60
-        services:
-        - logTemplateName: "elk"
-          metricTemplateName: "dd"
-          metricScopeVariables: "variable1"
-          canaryLogScope: "canaryapp-rest-1"
-          canaryMetricScope: "service:canaryapp"
-          logScopeVariables: "kubernetes.container_name"
-          baselineLogScope: "baseapp-rest-1"
-          baselineMetricScope: "service:baseapp"
-        gateUrl: "https://isd-argocd.isd-dev.opsmx.net/"
-        baselineStartTime: "2021-11-03T11:29:46.915Z"
-        user: "user2"
-    name: "oes-analysisqas"
+    - name: oes-analysisqas
+      provider:
+        opsmx:
+          profile: "opsmx-profile"
+          gateUrl: https://isd-argocd.isd-dev.opsmx.net/
+          application: elastcanddatadogapp1
+          baselineStartTime: "2021-11-03T11:29:46.915Z"
+          canaryStartTime: "2021-11-03T11:29:46.915Z" 
+          user: user2
+          lifetimeMinutes: 6
+          threshold:
+            pass: 80
+            marginal: 60
+          services:
+          - metricTemplateName: dd
+            metricScopeVariables: "variable1"
+            baselineMetricScope: "service:baseapp"
+            canaryMetricScope: "service:canaryapp"
+            logTemplateName: elk
+            logScopeVariables: "kubernetes.container_name"
+            baselineLogScope: "baseapp-rest-1"
+            canaryLogScope: "canaryapp-rest-1"
