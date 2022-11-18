@@ -10,14 +10,14 @@ spec:
   - provider:
       opsmx:
         canaryStartTime: "2021-11-03T11:29:46.915Z"
-        application: "argoappqatesttguks"
+        application: "argoappqatestrfpmh"
         profile: "opsmx-profile"
         lifetimeMinutes: 6
         threshold:
           pass: 80
           marginal: 60
         services:
-        - logTemplateName: "elk"
+        - logTemplateName: "qatestdqeiu"
           metricTemplateName: "dd"
           metricScopeVariables: "variable1"
           canaryLogScope: "canaryapp-rest-1"
