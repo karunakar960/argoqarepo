@@ -17,8 +17,8 @@ spec:
           pass: 80
           marginal: 60
         services:
-        - logTemplateName: "qatestssvtg"
-          metricTemplateName: "metricTemplate2389"
+        - logTemplateName: "elk"
+          metricTemplateName: "dd"
           metricScopeVariables: "variable1"
           canaryLogScope: "canaryapp-rest-1"
           canaryMetricScope: "service:canaryapp"
