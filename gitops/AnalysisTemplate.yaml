@@ -10,7 +10,7 @@ spec:
   - provider:
       opsmx:
         canaryStartTime: "2021-11-03T11:29:46.915Z"
-        application: "argoappqatestdzosr"
+        application: "argoappqatestipiqy"
         profile: "opsmx-profile"
         lifetimeMinutes: 6
         threshold:
